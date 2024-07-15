@@ -13,11 +13,13 @@ const InputAuto: React.FC<InputAutoProps> = ({ pholder, data, onSelected, onChan
   const [selectedVal, setSelectedVal] = useState("");
   const inputRef = useRef<HTMLDivElement>(null);
 
+  // Handler for input changes to update suggestions
   const handler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     const inputValue = (e.target as HTMLInputElement).value;
     setSuggestions(data.filter(i => i.toLowerCase().startsWith(inputValue.toLowerCase())));
   }, [data]);
 
+  // Handler for input changes to update the selected value
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setIsHideSuggs(false);
@@ -25,18 +27,21 @@ const InputAuto: React.FC<InputAutoProps> = ({ pholder, data, onSelected, onChan
     onChange(input);
   }, [onChange]);
 
+  // Function to hide suggestions and set the selected value
   const hideSuggs = useCallback((value: string) => {
     onSelected(value);
     setSelectedVal(value);
     setIsHideSuggs(true);
   }, [onSelected]);
 
+  // Handle click outside to hide suggestions
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
       setIsHideSuggs(true);
     }
   }, []);
 
+  // useEffect to add and clean up event listener for click outside
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
