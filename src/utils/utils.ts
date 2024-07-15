@@ -1,44 +1,30 @@
 import { Laureate } from '../hooks/useNobelPrizes';
 
-export const fuzzyMatch = (str: string, term: string) => {
-  const termLen = term.length;
-  const strLen = str.length;
-  if (termLen > strLen) return false;
-  if (termLen === strLen) return term === str;
-
-  outer: for (let i = 0, j = 0; i < termLen; i++) {
-    const ch = term.charCodeAt(i);
-    while (j < strLen) {
-      if (str.charCodeAt(j++) === ch) continue outer;
-      j++;
-    }
-    return false;
-  }
-  return true;
+// Normalize strings for comparison (e.g., remove whitespace and convert to lowercase)
+const normalizeString = (str: string): string => {
+  return str.replace(/\s+/g, '').toLowerCase();
 };
 
+// Perform search using simple substring matching
 export const handleSearch = (
   data: Laureate[], 
   searchName: string, 
   searchMotivation: string, 
   searchCategory: string, 
-  searchYear: string, 
-  fuzzyMatch: (str: string, term: string) => boolean
+  searchYear: string
 ) => {
-  const lowercasedName = searchName.toLowerCase();
-  const lowercasedMotivation = searchMotivation.toLowerCase();
-  const lowercasedCategory = searchCategory.toLowerCase();
-  const lowercasedYear = searchYear.toLowerCase();
+  const normalizedSearchName = normalizeString(searchName);
+  const normalizedSearchMotivation = normalizeString(searchMotivation);
+  const normalizedSearchCategory = normalizeString(searchCategory);
+  const normalizedSearchYear = normalizeString(searchYear);
 
   return data.filter(item => {
-    const fullName = `${item.firstname} ${item.surname}`.toLowerCase();
-    const matchesName = fuzzyMatch(fullName, lowercasedName);
-    const matchesMotivation = fuzzyMatch(item.motivation.toLowerCase(), lowercasedMotivation);
-    const matchesCategory = item.category && item.category.toLowerCase().includes(lowercasedCategory);
-    const matchesYear = item.year && item.year.includes(lowercasedYear);
+    const fullName = `${item.firstname} ${item.surname}`;
+    const matchesName = normalizedSearchName ? normalizeString(fullName).includes(normalizedSearchName) : true;
+    const matchesMotivation = normalizedSearchMotivation ? normalizeString(item.motivation).includes(normalizedSearchMotivation) : true;
+    const matchesCategory = normalizedSearchCategory ? normalizeString(item.category).includes(normalizedSearchCategory) : true;
+    const matchesYear = normalizedSearchYear ? normalizeString(item.year).includes(normalizedSearchYear) : true;
 
-    return matchesName && matchesMotivation &&
-           (searchCategory === '' || matchesCategory) &&
-           (searchYear === '' || matchesYear);
+    return matchesName && matchesMotivation && matchesCategory && matchesYear;
   });
 };

@@ -11,6 +11,7 @@ This project is a React application that allows users to search for Nobel Prize 
 - **Auto-Suggestions**: Provides auto-suggestions as you type in the search fields.
 - **Paginated Results**: Displays search results in a paginated table.
 - **Real-Time Updates**: Fetches the latest data from the Nobel Prize API every 60 seconds.
+- **Detailed View Modal**: When a user clicks the "View" button in the table, a modal opens displaying detailed information about the laureate, including their name, category, year, and motivation.
 
 ## How to Run
 
