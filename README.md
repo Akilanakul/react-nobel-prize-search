@@ -1,7 +1,3 @@
-Sure, here is the README file content you can use:
-
----
-
 # Nobel Prize Search Application
 
 This project is a React application that allows users to search for Nobel Prize laureates by name, motivation, category, and year. It fetches data from the Nobel Prize API and displays the results in a paginated table.
